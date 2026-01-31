@@ -2,12 +2,15 @@ package com.pdsa.analyzer;
 
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.Queue;
 
 public class StudentService {
 
     private boolean isSorted = false;
     private LinkedList<Student> students = new LinkedList<>();
     private Stack<Student> undoStack = new Stack<>();
+    private Queue<Student> analysisQueue = new LinkedList<>();
+
 
     public void addStudent(Student student) {
         students.add(student);
@@ -209,6 +212,45 @@ public class StudentService {
         System.out.println("Top 3 Students by Average:");
         for (int i = 0; i < 3; i++) {
             System.out.println((i + 1) + ". " + tempList.get(i));
+        }
+    }
+
+    public void addStudentsToQueue() {
+        if (students.isEmpty()) {
+            System.out.println("No students available to add to queue.");
+            return;
+        }
+
+        analysisQueue.clear();
+
+        for (Student student : students) {
+            analysisQueue.add(student);
+            System.out.println("Added to queue: " + student.getStudentId());
+        }
+
+        System.out.println("All students added to analysis queue.");
+    }
+
+    public void processNextStudent() {
+        if (analysisQueue.isEmpty()) {
+            System.out.println("Analysis queue is empty.");
+            return;
+        }
+
+        Student student = analysisQueue.poll(); // dequeue
+        System.out.println("Processing student:");
+        System.out.println(student);
+    }
+
+    public void viewQueueStatus() {
+        if (analysisQueue.isEmpty()) {
+            System.out.println("Analysis queue is empty.");
+            return;
+        }
+
+        System.out.println("Students in analysis queue:");
+        for (Student student : analysisQueue) {
+            System.out.println(student.getStudentId() + " - " + student.getName());
         }
     }
 

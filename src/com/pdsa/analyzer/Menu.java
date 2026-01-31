@@ -21,12 +21,15 @@ public class Menu {
             System.out.println("9. Find Highest Average");
             System.out.println("10. Find Lowest Average");
             System.out.println("11. Find Top 3 Students");
+            System.out.println("12. Add Students to Analysis Queue");
+            System.out.println("13. Process Next Student");
+            System.out.println("14. View Queue Status");
 
             if (service.isSorted()) {
-                System.out.println("12. Binary Search by Student ID");
-                System.out.println("13. Exit");
+                System.out.println("15. Binary Search by Student ID");
+                System.out.println("16. Exit");
             } else {
-                System.out.println("12. Exit");
+                System.out.println("15. Exit");
             }
 
             System.out.print("Choose option: ");
@@ -47,8 +50,11 @@ public class Menu {
                     case 9 -> findHighestAverage();
                     case 10 -> findLowestAverage();
                     case 11 -> findTopThree();
-                    case 12 -> binarySearchById();
-                    case 13 -> {
+                    case 12 -> addStudentsToQueue();
+                    case 13 -> processNextStudent();
+                    case 14 -> viewQueueStatus();
+                    case 15 -> binarySearchById();
+                    case 16 -> {
                         System.out.println("Exiting...");
                         return;
                     }
@@ -67,7 +73,10 @@ public class Menu {
                     case 9 -> findHighestAverage();
                     case 10 -> findLowestAverage();
                     case 11 -> findTopThree();
-                    case 12 -> {
+                    case 12 -> addStudentsToQueue();
+                    case 13 -> processNextStudent();
+                    case 14 -> viewQueueStatus();
+                    case 15 -> {
                         System.out.println("Exiting...");
                         return;
                     }
@@ -123,6 +132,18 @@ public class Menu {
 
     private void findTopThree() {
         service.findTopThreeStudents();
+    }
+
+    private void addStudentsToQueue() {
+        service.addStudentsToQueue();
+    }
+
+    private void processNextStudent() {
+        service.processNextStudent();
+    }
+
+    private void viewQueueStatus() {
+        service.viewQueueStatus();
     }
 
 }
