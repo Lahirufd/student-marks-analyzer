@@ -11,41 +11,46 @@ public class StudentService {
     private Stack<Student> undoStack = new Stack<>();
     private Queue<Student> analysisQueue = new LinkedList<>();
 
-
     public void addStudent(Student student) {
         students.add(student);
         undoStack.push(student);
-        System.out.println("Student added successfully!");
     }
 
-    public void undoLastStudent() {
+    public String undoLastStudent() {
         if (undoStack.isEmpty()) {
-            System.out.println("Nothing to undo.");
-            return;
+            return "Nothing to undo.";
         }
         Student last = undoStack.pop();
         students.remove(last);
-        System.out.println("Last student entry undone.");
+        return "Last student removed.";
     }
 
-    public void displayStudents() {
+    public String displayStudents() {
+
         if (students.isEmpty()) {
-            System.out.println("No students available.");
-            return;
+            return "No students available.";
         }
+
+        StringBuilder sb = new StringBuilder();
+
         for (Student s : students) {
-            System.out.println(s);
+            sb.append(s).append("\n");
         }
+
+        return sb.toString();
     }
 
-    public void sortByAverageBubble() {
+    /* ================= SORT ================= */
+
+    public String sortByAverageBubble() {
+
         int n = students.size();
 
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
 
                 if (students.get(j).getAverage() > students.get(j + 1).getAverage()) {
-                    // swap
+
                     Student temp = students.get(j);
                     students.set(j, students.get(j + 1));
                     students.set(j + 1, temp);
@@ -54,16 +59,18 @@ public class StudentService {
         }
 
         isSorted = true;
-        System.out.println("Students sorted by average marks (Bubble Sort).");
+        return "Sorted by Average (Bubble Sort)";
     }
 
-    public void sortByTotalBubble() {
+    public String sortByTotalBubble() {
+
         int n = students.size();
 
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
 
                 if (students.get(j).getTotal() > students.get(j + 1).getTotal()) {
+
                     Student temp = students.get(j);
                     students.set(j, students.get(j + 1));
                     students.set(j + 1, temp);
@@ -72,190 +79,197 @@ public class StudentService {
         }
 
         isSorted = true;
-        System.out.println("Students sorted by total marks (Bubble Sort).");
+        return "Sorted by Total (Bubble Sort)";
     }
 
-    public void sortByNameSelection() {
+    public String sortByNameSelection() {
+
         int n = students.size();
 
         for (int i = 0; i < n - 1; i++) {
-            int minIndex = i;
+
+            int min = i;
 
             for (int j = i + 1; j < n; j++) {
+
                 if (students.get(j).getName()
-                        .compareToIgnoreCase(students.get(minIndex).getName()) < 0) {
-                    minIndex = j;
+                        .compareToIgnoreCase(students.get(min).getName()) < 0) {
+
+                    min = j;
                 }
             }
 
-            Student temp = students.get(minIndex);
-            students.set(minIndex, students.get(i));
+            Student temp = students.get(min);
+            students.set(min, students.get(i));
             students.set(i, temp);
         }
 
         isSorted = true;
-        System.out.println("Students sorted by name (Selection Sort).");
+        return "Sorted by Name (Selection Sort)";
     }
 
-    public void searchByStudentId(String studentId) {
-        boolean found = false;
+    /* ================= SEARCH ================= */
 
-        for (Student student : students) {
-            if (student.getStudentId().equalsIgnoreCase(studentId)) {
-                System.out.println("Student found:");
-                System.out.println(student);
-                found = true;
-                break;
+    public String searchByStudentId(String id) {
+
+        for (Student s : students) {
+
+            if (s.getStudentId().equalsIgnoreCase(id)) {
+                return "Student Found:\n" + s;
             }
         }
 
-        if (!found) {
-            System.out.println("Student with ID " + studentId + " not found.");
-        }
+        return "Student not found.";
     }
 
-    public void searchByName(String name) {
-        boolean found = false;
+    public String searchByName(String name) {
 
-        for (Student student : students) {
-            if (student.getName().equalsIgnoreCase(name)) {
-                System.out.println("Student found:");
-                System.out.println(student);
-                found = true;
+        StringBuilder sb = new StringBuilder();
+
+        for (Student s : students) {
+
+            if (s.getName().equalsIgnoreCase(name)) {
+                sb.append(s).append("\n");
             }
         }
 
-        if (!found) {
-            System.out.println("No student found with name " + name);
+        if (sb.length() == 0) {
+            return "No student found.";
         }
+
+        return sb.toString();
     }
 
-    public void binarySearchByStudentId(String studentId) {
+    public String binarySearchByStudentId(String id) {
+
         int low = 0;
         int high = students.size() - 1;
 
         while (low <= high) {
-            int mid = (low + high) / 2;
-            int compare = students.get(mid).getStudentId().compareToIgnoreCase(studentId);
 
-            if (compare == 0) {
-                System.out.println("Student found:");
-                System.out.println(students.get(mid));
-                return;
-            } else if (compare < 0) {
+            int mid = (low + high) / 2;
+
+            int cmp = students.get(mid)
+                    .getStudentId()
+                    .compareToIgnoreCase(id);
+
+            if (cmp == 0) {
+                return "Student Found:\n" + students.get(mid);
+            }
+            else if (cmp < 0) {
                 low = mid + 1;
-            } else {
+            }
+            else {
                 high = mid - 1;
             }
         }
 
-        System.out.println("Student not found (Binary Search).");
+        return "Student not found.";
     }
 
-    public void findHighestAverage() {
+    /* ================= PERFORMANCE ================= */
+
+    public String findHighestAverage() {
+
         if (students.isEmpty()) {
-            System.out.println("No students available.");
-            return;
+            return "No students available.";
         }
 
-        Student topStudent = students.getFirst();
+        Student best = students.getFirst();
 
-        for (Student student : students) {
-            if (student.getAverage() > topStudent.getAverage()) {
-                topStudent = student;
+        for (Student s : students) {
+
+            if (s.getAverage() > best.getAverage()) {
+                best = s;
             }
         }
 
-        System.out.println("Student with Highest Average:");
-        System.out.println(topStudent);
+        return "Highest Average:\n" + best;
     }
 
-    public void findLowestAverage() {
+    public String findLowestAverage() {
+
         if (students.isEmpty()) {
-            System.out.println("No students available.");
-            return;
+            return "No students available.";
         }
 
-        Student lowStudent = students.getFirst();
+        Student low = students.getFirst();
 
-        for (Student student : students) {
-            if (student.getAverage() < lowStudent.getAverage()) {
-                lowStudent = student;
+        for (Student s : students) {
+
+            if (s.getAverage() < low.getAverage()) {
+                low = s;
             }
         }
 
-        System.out.println("Student with Lowest Average:");
-        System.out.println(lowStudent);
+        return "Lowest Average:\n" + low;
     }
 
-    public void findTopThreeStudents() {
+    public String findTopThreeStudents() {
+
         if (students.size() < 3) {
-            System.out.println("Not enough students to determine top 3.");
-            return;
+            return "Not enough students.";
         }
 
-        // Create a temporary copy
-        LinkedList<Student> tempList = new LinkedList<>(students);
+        LinkedList<Student> temp = new LinkedList<>(students);
 
-        // Bubble sort temp list by average (descending)
-        int n = tempList.size();
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (tempList.get(j).getAverage() < tempList.get(j + 1).getAverage()) {
-                    Student temp = tempList.get(j);
-                    tempList.set(j, tempList.get(j + 1));
-                    tempList.set(j + 1, temp);
-                }
-            }
-        }
+        temp.sort((a,b)-> Double.compare(b.getAverage(), a.getAverage()));
 
-        System.out.println("Top 3 Students by Average:");
+        StringBuilder sb = new StringBuilder();
+
         for (int i = 0; i < 3; i++) {
-            System.out.println((i + 1) + ". " + tempList.get(i));
+            sb.append((i+1)).append(". ").append(temp.get(i)).append("\n");
         }
+
+        return sb.toString();
     }
 
-    public void addStudentsToQueue() {
+    /* ================= QUEUE ================= */
+
+    public String addStudentsToQueue() {
+
         if (students.isEmpty()) {
-            System.out.println("No students available to add to queue.");
-            return;
+            return "No students to add.";
         }
 
         analysisQueue.clear();
 
-        for (Student student : students) {
-            analysisQueue.add(student);
-            System.out.println("Added to queue: " + student.getStudentId());
+        for (Student s : students) {
+            analysisQueue.add(s);
         }
 
-        System.out.println("All students added to analysis queue.");
+        return "Students added to queue.";
     }
 
-    public void processNextStudent() {
+    public String processNextStudent() {
+
         if (analysisQueue.isEmpty()) {
-            System.out.println("Analysis queue is empty.");
-            return;
+            return "Queue empty.";
         }
 
-        Student student = analysisQueue.poll(); // dequeue
-        System.out.println("Processing student:");
-        System.out.println(student);
+        Student s = analysisQueue.poll();
+        return "Processing:\n" + s;
     }
 
-    public void viewQueueStatus() {
+    public String viewQueueStatus() {
+
         if (analysisQueue.isEmpty()) {
-            System.out.println("Analysis queue is empty.");
-            return;
+            return "Queue empty.";
         }
 
-        System.out.println("Students in analysis queue:");
-        for (Student student : analysisQueue) {
-            System.out.println(student.getStudentId() + " - " + student.getName());
+        StringBuilder sb = new StringBuilder();
+
+        for (Student s : analysisQueue) {
+            sb.append(s.getStudentId())
+                    .append(" - ")
+                    .append(s.getName())
+                    .append("\n");
         }
+
+        return sb.toString();
     }
 
     public boolean isSorted() {
         return isSorted;
     }
-
 }

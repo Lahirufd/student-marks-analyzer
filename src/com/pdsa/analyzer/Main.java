@@ -2,7 +2,8 @@ package com.pdsa.analyzer;
 
 public class Main {
     public static void main(String[] args) {
-        Menu menu = new Menu();
-        menu.start();
+//        Menu menu = new Menu();
+//        menu.start();
+        new StudentUI();
     }
 }
