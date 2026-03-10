@@ -1,4 +1,6 @@
-package com.pdsa.analyzer;
+package com.pdsa.analyzer.controller;
+
+import com.pdsa.analyzer.model.Student;
 
 import java.util.LinkedList;
 import java.util.Stack;

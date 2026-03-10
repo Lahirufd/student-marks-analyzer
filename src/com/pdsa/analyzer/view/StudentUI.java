@@ -1,4 +1,7 @@
-package com.pdsa.analyzer;
+package com.pdsa.analyzer.view;
+
+import com.pdsa.analyzer.controller.StudentService;
+import com.pdsa.analyzer.model.Student;
 
 import javax.swing.*;
 import java.awt.*;
