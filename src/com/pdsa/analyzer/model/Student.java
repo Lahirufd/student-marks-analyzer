@@ -1,4 +1,4 @@
-package com.pdsa.analyzer;
+package com.pdsa.analyzer.model;
 
 public class Student {
 
