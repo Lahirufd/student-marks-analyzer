@@ -1,31 +1,38 @@
 package com.pdsa.analyzer.controller;
 
 import com.pdsa.analyzer.model.Student;
-
-import java.util.LinkedList;
-import java.util.Stack;
-import java.util.Queue;
+import com.pdsa.analyzer.datastructure.SinglyLinkedList;
+import com.pdsa.analyzer.datastructure.MyStack;
+import com.pdsa.analyzer.datastructure.MyQueue;
 
 public class StudentService {
 
     private boolean isSorted = false;
-    private LinkedList<Student> students = new LinkedList<>();
-    private Stack<Student> undoStack = new Stack<>();
-    private Queue<Student> analysisQueue = new LinkedList<>();
+
+    private SinglyLinkedList students = new SinglyLinkedList();
+    private MyStack undoStack = new MyStack();
+    private MyQueue analysisQueue = new MyQueue();
+
+    /* ================= ADD & UNDO ================= */
 
     public void addStudent(Student student) {
-        students.add(student);
+        students.addNodeEnd(student);
         undoStack.push(student);
     }
 
     public String undoLastStudent() {
+
         if (undoStack.isEmpty()) {
             return "Nothing to undo.";
         }
+
         Student last = undoStack.pop();
         students.remove(last);
+
         return "Last student removed.";
     }
+
+    /* ================= DISPLAY ================= */
 
     public String displayStudents() {
 
@@ -35,8 +42,8 @@ public class StudentService {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Student s : students) {
-            sb.append(s).append("\n");
+        for (int i = 0; i < students.size(); i++) {
+            sb.append(students.get(i)).append("\n");
         }
 
         return sb.toString();
@@ -114,7 +121,8 @@ public class StudentService {
 
     public String searchByStudentId(String id) {
 
-        for (Student s : students) {
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
 
             if (s.getStudentId().equalsIgnoreCase(id)) {
                 return "Student Found:\n" + s;
@@ -128,7 +136,8 @@ public class StudentService {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Student s : students) {
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
 
             if (s.getName().equalsIgnoreCase(name)) {
                 sb.append(s).append("\n");
@@ -157,11 +166,9 @@ public class StudentService {
 
             if (cmp == 0) {
                 return "Student Found:\n" + students.get(mid);
-            }
-            else if (cmp < 0) {
+            } else if (cmp < 0) {
                 low = mid + 1;
-            }
-            else {
+            } else {
                 high = mid - 1;
             }
         }
@@ -179,7 +186,8 @@ public class StudentService {
 
         Student best = students.getFirst();
 
-        for (Student s : students) {
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
 
             if (s.getAverage() > best.getAverage()) {
                 best = s;
@@ -197,7 +205,8 @@ public class StudentService {
 
         Student low = students.getFirst();
 
-        for (Student s : students) {
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
 
             if (s.getAverage() < low.getAverage()) {
                 low = s;
@@ -213,14 +222,26 @@ public class StudentService {
             return "Not enough students.";
         }
 
-        LinkedList<Student> temp = new LinkedList<>(students);
+        // Bubble Sort Descending
+        for (int i = 0; i < students.size() - 1; i++) {
+            for (int j = 0; j < students.size() - i - 1; j++) {
 
-        temp.sort((a,b)-> Double.compare(b.getAverage(), a.getAverage()));
+                if (students.get(j).getAverage() < students.get(j + 1).getAverage()) {
+
+                    Student temp = students.get(j);
+                    students.set(j, students.get(j + 1));
+                    students.set(j + 1, temp);
+                }
+            }
+        }
 
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < 3; i++) {
-            sb.append((i+1)).append(". ").append(temp.get(i)).append("\n");
+            sb.append((i + 1))
+                    .append(". ")
+                    .append(students.get(i))
+                    .append("\n");
         }
 
         return sb.toString();
@@ -236,8 +257,8 @@ public class StudentService {
 
         analysisQueue.clear();
 
-        for (Student s : students) {
-            analysisQueue.add(s);
+        for (int i = 0; i < students.size(); i++) {
+            analysisQueue.add(students.get(i));
         }
 
         return "Students added to queue.";
@@ -261,7 +282,9 @@ public class StudentService {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Student s : analysisQueue) {
+        for (int i = 0; i < analysisQueue.size(); i++) {
+            Student s = analysisQueue.get(i);
+
             sb.append(s.getStudentId())
                     .append(" - ")
                     .append(s.getName())
